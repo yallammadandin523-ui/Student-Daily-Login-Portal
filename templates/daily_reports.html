@@ -1,0 +1,248 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Reports</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #0b1120;
+            color: #e2e8f0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 1250px;
+            margin: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 28px;
+        }
+
+        h1 { color: #60a5fa; }
+
+        .subtitle {
+            color: #94a3b8;
+            margin-top: 8px;
+        }
+
+        .back {
+            background: #2563eb;
+            color: white;
+            padding: 11px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+        }
+
+        .card {
+            background: #172033;
+            border: 1px solid #26364f;
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 22px;
+        }
+
+        .report-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 18px;
+            margin-top: 20px;
+        }
+
+        .stat {
+            background: #111c30;
+            padding: 22px;
+            border-radius: 10px;
+            border: 1px solid #334155;
+        }
+
+        .stat p {
+            color: #94a3b8;
+            margin-bottom: 12px;
+        }
+
+        .stat h2 {
+            color: #60a5fa;
+            font-size: 28px;
+        }
+
+        .download-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .download {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            padding: 13px 20px;
+            border-radius: 8px;
+        }
+
+        .download.zip { background: #0f766e; }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin-top: 18px;
+        }
+
+        table {
+            width: 100%;
+            min-width: 650px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #334155;
+        }
+
+        th {
+            background: #111c30;
+            color: #60a5fa;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 25px;
+            color: #94a3b8;
+        }
+
+        @media(max-width: 600px) {
+            body { padding: 15px; }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <div class="header">
+        <div>
+            <h1>Daily Reports</h1>
+            <p class="subtitle">
+                Daily Student Screenshot Submission Reports
+            </p>
+        </div>
+
+        <a href="{{ url_for('admin_dashboard') }}" class="back">
+            ← Back to Dashboard
+        </a>
+    </div>
+
+    <div class="card">
+        <h3>Today's Report Summary</h3>
+
+        <div class="report-grid">
+
+            <div class="stat">
+                <p>Total Students</p>
+                <h2>{{ total_students }}</h2>
+            </div>
+
+            <div class="stat">
+                <p>Uploaded Students</p>
+                <h2>{{ uploaded_count }}</h2>
+            </div>
+
+            <div class="stat">
+                <p>Not Uploaded</p>
+                <h2>{{ not_uploaded_count }}</h2>
+            </div>
+
+            <div class="stat">
+                <p>Upload Percentage</p>
+                <h2>{{ upload_percentage }}%</h2>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Download Daily Report</h3>
+
+        <p style="color:#94a3b8;margin-top:10px;">
+            Download the Excel report and ZIP archive when they are generated.
+        </p>
+
+        <div class="download-buttons">
+
+            {% if excel_path %}
+                <a href="{{ url_for('download_excel') }}" class="download">
+                    📊 Download Excel
+                </a>
+            {% endif %}
+
+            {% if zip_path %}
+                <a href="{{ url_for('download_zip') }}" class="download zip">
+                    📦 Download Daily ZIP
+                </a>
+            {% endif %}
+
+            {% if not excel_path and not zip_path %}
+                <p style="color:#fbbf24;">
+                    Daily report files have not been generated yet.
+                </p>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Report History</h3>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Report Date</th>
+                        <th>Total Students</th>
+                        <th>Uploaded</th>
+                        <th>Not Uploaded</th>
+                        <th>Generated At</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                {% for report in reports %}
+                    <tr>
+                        <td>{{ report.report_date }}</td>
+                        <td>{{ report.total_students }}</td>
+                        <td>{{ report.uploaded_count }}</td>
+                        <td>{{ report.not_uploaded_count }}</td>
+                        <td>{{ report.generated_at }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="empty">
+                            No daily reports available yet.
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

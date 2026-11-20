@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CR Dashboard | Student Portal</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: #080f1e;
+    color: #ffffff;
+    padding: 35px;
+}
+
+.container {
+    max-width: 1250px;
+    margin: auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 25px 30px;
+    background: linear-gradient(120deg, #142844, #18223b);
+    border: 1px solid #2b4263;
+    border-radius: 18px;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    font-size: 28px;
+    color: #66b4ff;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #a6b6ce;
+    font-size: 14px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.role-badge {
+    background: #263e62;
+    color: #75bdff;
+    padding: 9px 16px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.logout {
+    background: #d94359;
+    color: white;
+    padding: 11px 20px;
+    border-radius: 9px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.logout:hover {
+    background: #f05269;
+    transform: translateY(-2px);
+}
+
+.section-heading {
+    margin-bottom: 20px;
+}
+
+.section-heading h2 {
+    font-size: 20px;
+    margin-bottom: 7px;
+}
+
+.section-heading p {
+    color: #8fa2bd;
+    font-size: 13px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    background: #121e33;
+    border: 1px solid #293e5e;
+    border-radius: 16px;
+    padding: 25px;
+    min-height: 190px;
+    color: white;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    border-color: #359bff;
+    background: #172944;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.icon {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 13px;
+    background: #203958;
+    font-size: 26px;
+    margin-bottom: 20px;
+}
+
+.card h3 {
+    font-size: 17px;
+    margin-bottom: 9px;
+    color: #75baff;
+}
+
+.card p {
+    color: #9aacc5;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.card-arrow {
+    position: absolute;
+    right: 23px;
+    bottom: 22px;
+    color: #69b5ff;
+    font-size: 20px;
+}
+
+.upload-card {
+    border-color: #2679c9;
+    background: linear-gradient(135deg, #142e4c, #17243d);
+}
+
+.upload-card .icon {
+    background: #18528b;
+}
+
+.footer {
+    text-align: center;
+    color: #7388a5;
+    font-size: 12px;
+    margin-top: 40px;
+    padding: 20px;
+    border-top: 1px solid #23334c;
+}
+
+@media(max-width: 600px) {
+    body {
+        padding: 16px;
+    }
+
+    .header {
+        padding: 22px;
+    }
+
+    .header h1 {
+        font-size: 23px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+
+        <div>
+            <h1>👥 CR Dashboard</h1>
+            <p class="subtitle">
+                Welcome, {{ user_name }}
+            </p>
+            <p class="subtitle">
+                CSE Department · Semester 5
+            </p>
+        </div>
+
+        <div class="header-right">
+            <span class="role-badge">CLASS REPRESENTATIVE</span>
+
+            <a href="{{ url_for('logout') }}" class="logout">
+                Logout ↗
+            </a>
+        </div>
+
+    </div>
+
+
+    <!-- DASHBOARD MENU -->
+    <div class="section-heading">
+        <h2>Portal Management</h2>
+        <p>Manage daily screenshots and student submission records.</p>
+    </div>
+
+
+    <div class="grid">
+
+        <!-- UPLOAD SCREENSHOT -->
+        <a href="{{ url_for('student_upload') }}"
+           class="card upload-card">
+
+            <div class="icon">📤</div>
+
+            <h3>Upload Screenshot</h3>
+
+            <p>
+                Submit your own daily student login screenshot.
+            </p>
+
+            <span class="card-arrow">→</span>
+
+        </a>
+
+
+        <!-- STUDENT DETAILS -->
+        <a href="{{ url_for('student_management') }}"
+           class="card">
+
+            <div class="icon">🎓</div>
+
+            <h3>Student Details</h3>
+
+            <p>
+                View CSE 5th semester Student, CR and Admin details.
+            </p>
+
+            <span class="card-arrow">→</span>
+
+        </a>
+
+
+        <!-- UPLOADED STUDENTS -->
+        <a href="{{ url_for('uploaded_students') }}"
+           class="card">
+
+            <div class="icon">✅</div>
+
+            <h3>Uploaded Members</h3>
+
+            <p>
+                View today's uploaded screenshots and submission details.
+            </p>
+
+            <span class="card-arrow">→</span>
+
+        </a>
+
+
+        <!-- NOT UPLOADED -->
+        <a href="{{ url_for('not_uploaded_students') }}"
+           class="card">
+
+            <div class="icon">⚠️</div>
+
+            <h3>Not Uploaded Members</h3>
+
+            <p>
+                Check members who have not submitted today's screenshot.
+            </p>
+
+            <span class="card-arrow">→</span>
+
+        </a>
+
+
+        <!-- DAILY REPORTS -->
+        <a href="{{ url_for('daily_reports') }}"
+           class="card">
+
+            <div class="icon">📊</div>
+
+            <h3>Daily Reports</h3>
+
+            <p>
+                View daily submission reports and download Excel and ZIP files.
+            </p>
+
+            <span class="card-arrow">→</span>
+
+        </a>
+
+    </div>
+
+
+    <div class="footer">
+        Student Daily Login Portal · CSE Department · Semester 5
+    </div>
+
+</div>
+
+</body>
+</html>

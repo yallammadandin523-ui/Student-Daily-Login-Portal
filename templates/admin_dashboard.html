@@ -1,0 +1,391 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Student Portal</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background: #101827;
+            color: #f1f5f9;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 245px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: #0b1220;
+            padding: 25px 17px;
+            border-right: 1px solid #25344a;
+            overflow-y: auto;
+        }
+
+        .brand {
+            font-size: 19px;
+            font-weight: bold;
+            color: #38bdf8;
+            margin-bottom: 8px;
+        }
+
+        .brand-sub {
+            color: #94a3b8;
+            font-size: 11px;
+            margin-bottom: 40px;
+        }
+
+        .menu-title {
+            color: #64748b;
+            font-size: 11px;
+            margin: 20px 10px 12px;
+            letter-spacing: 1px;
+        }
+
+        .menu a {
+            display: block;
+            padding: 13px 12px;
+            margin-bottom: 7px;
+            color: #cbd5e1;
+            text-decoration: none;
+            border-radius: 9px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .menu a.active,
+        .menu a:hover {
+            background: #1e40af;
+            color: white;
+        }
+
+        .main {
+            margin-left: 245px;
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+            gap: 15px;
+        }
+
+        .topbar h1 {
+            font-size: 26px;
+        }
+
+        .topbar p {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .admin-profile {
+            background: #1e293b;
+            border: 1px solid #334155;
+            padding: 11px 17px;
+            border-radius: 10px;
+            color: #38bdf8;
+            font-size: 13px;
+        }
+
+        .welcome {
+            background: linear-gradient(110deg, #1d4ed8, #0369a1);
+            padding: 27px;
+            border-radius: 16px;
+            margin-bottom: 28px;
+        }
+
+        .welcome h2 {
+            font-size: 23px;
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            color: #dbeafe;
+            font-size: 14px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            padding: 23px;
+            border-radius: 14px;
+            transition: 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: #38bdf8;
+        }
+
+        .stat-icon {
+            font-size: 25px;
+            margin-bottom: 15px;
+        }
+
+        .stat-card h2 {
+            font-size: 29px;
+            margin-bottom: 6px;
+        }
+
+        .stat-card p {
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        .blue { color: #38bdf8; }
+        .green { color: #4ade80; }
+        .orange { color: #fbbf24; }
+        .purple { color: #a78bfa; }
+
+        .section-title {
+            font-size: 19px;
+            margin-bottom: 17px;
+        }
+
+        .management {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .manage-card {
+            display: block;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 14px;
+            padding: 22px;
+            text-decoration: none;
+            color: inherit;
+            transition: 0.3s;
+        }
+
+        .manage-card:hover {
+            transform: translateY(-4px);
+            border-color: #38bdf8;
+            background: #243449;
+        }
+
+        .manage-card h3 {
+            margin: 12px 0 8px;
+            font-size: 16px;
+        }
+
+        .manage-card p {
+            color: #94a3b8;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .manage-icon {
+            font-size: 28px;
+            color: #38bdf8;
+        }
+
+        .footer {
+            text-align: center;
+            color: #64748b;
+            font-size: 12px;
+            margin-top: 45px;
+        }
+
+        @media(max-width: 1000px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .management {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media(max-width: 650px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 18px;
+            }
+
+            .stats,
+            .management {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+
+    <div class="brand">◈ STUDENT PORTAL</div>
+    <div class="brand-sub">ADMIN CONTROL PANEL</div>
+
+    <div class="menu-title">MAIN MENU</div>
+
+    <nav class="menu">
+        <a href="{{ url_for('admin_dashboard') }}" class="active">▦ Dashboard</a>
+        <a href="{{ url_for('student_upload') }}">📸 Upload Screenshot</a>
+        <a href="{{ url_for('student_management') }}">♙ Student Management</a>
+        <a href="{{ url_for('cr_management') }}">♧ CR Management</a>
+        <a href="{{ url_for('uploaded_students') }}">↑ Uploaded Students</a>
+        <a href="{{ url_for('not_uploaded_students') }}">◷ Not Uploaded Students</a>
+        <a href="{{ url_for('daily_reports') }}">▤ Daily Reports</a>
+    </nav>
+
+    <div class="menu-title">DOWNLOADS</div>
+
+    <nav class="menu">
+        <a href="{{ url_for('download_excel') }}">📊 Excel Download</a>
+        <a href="{{ url_for('download_zip') }}">📁 ZIP Download</a>
+    </nav>
+
+    <div class="menu-title">ACCOUNT</div>
+
+    <nav class="menu">
+        <a href="{{ url_for('logout') }}">⇥ Logout</a>
+    </nav>
+
+</aside>
+
+
+<main class="main">
+
+    <header class="topbar">
+        <div>
+            <h1>Dashboard Overview</h1>
+            <p>Monitor and manage daily student login activities.</p>
+        </div>
+
+        <div class="admin-profile">
+            ● Administrator
+        </div>
+    </header>
+
+
+    <section class="welcome">
+        <h2>Welcome Back, {{ session.get('user_name', 'Admin') }}!</h2>
+        <p>Student Daily Login Screenshot Portal | CSE Department</p>
+    </section>
+
+
+    <h2 class="section-title">Portal Statistics</h2>
+
+    <section class="stats">
+
+        <div class="stat-card">
+            <div class="stat-icon blue">♙</div>
+            <h2>{{ total_students }}</h2>
+            <p>Total Students</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon purple">♧</div>
+            <h2>{{ total_crs }}</h2>
+            <p>Total CRs</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon green">↑</div>
+            <h2>{{ uploaded_today }}</h2>
+            <p>Uploaded Today</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon orange">◷</div>
+            <h2>{{ not_uploaded_today }}</h2>
+            <p>Not Uploaded Today</p>
+        </div>
+
+    </section>
+
+
+    <h2 class="section-title">Management Center</h2>
+
+    <section class="management">
+
+        <a href="{{ url_for('student_management') }}" class="manage-card">
+            <div class="manage-icon">♟</div>
+            <h3>Student Management</h3>
+            <p>View and manage student details.</p>
+        </a>
+
+        <a href="{{ url_for('cr_management') }}" class="manage-card">
+            <div class="manage-icon">👨‍🏫</div>
+            <h3>CR Management</h3>
+            <p>View and manage CR accounts.</p>
+        </a>
+
+        <a href="{{ url_for('uploaded_students') }}" class="manage-card">
+            <div class="manage-icon">📤</div>
+            <h3>Uploaded Students</h3>
+            <p>View students who uploaded screenshots today.</p>
+        </a>
+
+        <a href="{{ url_for('not_uploaded_students') }}" class="manage-card">
+            <div class="manage-icon">⏳</div>
+            <h3>Not Uploaded Students</h3>
+            <p>View students who have not uploaded screenshots today.</p>
+        </a>
+
+        <a href="{{ url_for('daily_reports') }}" class="manage-card">
+            <div class="manage-icon">📊</div>
+            <h3>Daily Reports</h3>
+            <p>View daily upload reports and records.</p>
+        </a>
+
+        <a href="{{ url_for('download_excel') }}" class="manage-card">
+            <div class="manage-icon">📗</div>
+            <h3>Excel Download</h3>
+            <p>Download student upload details in Excel format.</p>
+        </a>
+
+        <a href="{{ url_for('download_zip') }}" class="manage-card">
+            <div class="manage-icon">📁</div>
+            <h3>Screenshot ZIP Download</h3>
+            <p>Download date-wise screenshot collections.</p>
+        </a>
+
+    </section>
+
+
+    <div class="footer">
+        © 2026 Student Daily Login Screenshot Portal
+        <br><br>
+        CSE Department | 5th Semester
+    </div>
+
+</main>
+
+</body>
+</html>

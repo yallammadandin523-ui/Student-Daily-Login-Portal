@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #080c24, #172554, #312e81);
+        }
+        .card {
+            width: 100%;
+            max-width: 450px;
+            padding: 38px;
+            border-radius: 22px;
+            background: white;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.35);
+        }
+        h2 { text-align: center; color: #111827; margin-bottom: 8px; }
+        .subtitle { text-align: center; color: #64748b; font-size: 14px; margin-bottom: 22px; }
+        label { display: block; margin: 15px 0 7px; color: #334155; font-size: 14px; font-weight: 600; }
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #dbe1ef;
+            border-radius: 10px;
+            background: #f8faff;
+            font-size: 15px;
+            outline: none;
+        }
+        input:focus { border-color: #6366f1; }
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #4f46e5, #0891b2);
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .login-link { text-align: center; margin-top: 20px; font-size: 14px; }
+        a { color: #4f46e5; font-weight: 700; text-decoration: none; }
+        .tag { text-align: center; margin-top: 20px; color: #64748b; font-size: 12px; }
+        .error { color: red; text-align: center; font-size: 14px; margin-bottom: 12px; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h2>Student Registration</h2>
+    <p class="subtitle">Student Daily Login Screenshot Portal</p>
+
+    {% if error %}
+    <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('register') }}">
+        <label>Student Name</label>
+        <input type="text" name="name" maxlength="100"
+               placeholder="Enter your full name" required>
+
+        <label>USN</label>
+        <input type="text" name="usn" maxlength="30"
+               placeholder="Enter your USN" required>
+
+        <label>Email Address</label>
+        <input type="email" name="email" maxlength="150"
+               placeholder="Enter your email address" required>
+
+        <label>Phone Number</label>
+        <input type="tel" name="phone" maxlength="15"
+               placeholder="Enter your phone number" required>
+
+        <label>Password</label>
+        <input type="password" name="password" minlength="6"
+               placeholder="Create a password" required>
+
+        <label>Confirm Password</label>
+        <input type="password" name="confirm_password" minlength="6"
+               placeholder="Confirm your password" required>
+
+        <button type="submit">Create Account →</button>
+    </form>
+
+    <p class="login-link">
+        Already registered?
+        <a href="{{ url_for('login') }}">Login Here</a>
+    </p>
+
+    <div class="tag">CSE • 5th Semester</div>
+</div>
+</body>
+</html>

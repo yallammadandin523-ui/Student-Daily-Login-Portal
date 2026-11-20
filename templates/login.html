@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login | Portal</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #080c24, #172554, #312e81);
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 430px;
+            padding: 42px;
+            border-radius: 22px;
+            background: rgba(255,255,255,0.97);
+            box-shadow: 0 25px 70px rgba(0,0,0,0.35);
+        }
+
+        .logo {
+            width: 75px;
+            height: 75px;
+            margin: 0 auto 20px;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #6366f1, #06b6d4);
+            color: white;
+            font-size: 27px;
+            font-weight: 800;
+        }
+
+        h2 {
+            text-align: center;
+            color: #111827;
+            font-size: 27px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin: 18px 0 8px;
+            color: #334155;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #dbe1ef;
+            border-radius: 11px;
+            background: #f8faff;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #6366f1;
+            background: white;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 28px;
+            padding: 15px;
+            border: none;
+            border-radius: 11px;
+            background: linear-gradient(135deg, #4f46e5, #0891b2);
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .register-link {
+            display: block;
+            margin-top: 22px;
+            text-align: center;
+            color: #4f46e5;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .register-link:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            margin-top: 25px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        .tag {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 7px 13px;
+            border-radius: 20px;
+            background: #eef2ff;
+            color: #4f46e5;
+            font-size: 12px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-card">
+
+    <div class="logo">SL</div>
+
+    <h2>Welcome Back!</h2>
+
+    <p class="subtitle">
+        Student Daily Login Screenshot Portal
+    </p>
+
+    {% if error %}
+    <p style="color:red; text-align:center; margin-bottom:15px;">
+        {{ error }}
+    </p>
+    {% endif %}
+
+    {% if success %}
+    <p style="color:green; text-align:center; margin-bottom:15px;">
+        {{ success }}
+    </p>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('login') }}">
+
+        <label for="phone">Phone Number</label>
+        <input
+            type="tel"
+            id="phone"
+            name="phone"
+            placeholder="Enter your phone number"
+            required
+        >
+
+        <label for="password">Password</label>
+        <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            required
+        >
+
+        <button type="submit">Sign In →</button>
+
+    </form>
+
+    <a href="{{ url_for('register') }}" class="register-link">
+        New Student? Register Here →
+    </a>
+
+    <div class="footer">
+        <span class="tag">CSE • 5th Semester</span>
+        <br><br>
+        © 2026 Student Daily Login Portal
+    </div>
+
+</div>
+
+</body>
+</html>

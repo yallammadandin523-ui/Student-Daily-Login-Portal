@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #0b1120;
+            color: #e2e8f0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        h1 { color: #60a5fa; }
+
+        .back {
+            color: white;
+            background: #2563eb;
+            padding: 11px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+        }
+
+        .card {
+            background: #172033;
+            padding: 22px;
+            border: 1px solid #26364f;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .search {
+            width: 100%;
+            padding: 13px;
+            background: #0b1120;
+            color: white;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .table-wrapper { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1050px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #334155;
+            font-size: 14px;
+        }
+
+        th {
+            color: #60a5fa;
+            background: #111c30;
+        }
+
+        tr:hover { background: #202d43; }
+
+        .status {
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .active { background: #14532d; color: #86efac; }
+        .inactive { background: #7f1d1d; color: #fca5a5; }
+        .uploaded { background: #164e63; color: #67e8f9; }
+        .pending { background: #713f12; color: #fde68a; }
+
+        .empty {
+            text-align: center;
+            padding: 30px;
+            color: #94a3b8;
+        }
+
+        .serial {
+            color: #60a5fa;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <div class="header">
+        <div>
+            <h1>Student Management</h1>
+            <p style="color:#94a3b8;margin-top:8px;">
+                Complete Student Information
+            </p>
+        </div>
+
+        {% if session.get('role') == 'admin' %}
+            <a href="{{ url_for('admin_dashboard') }}" class="back">
+                ← Back to Dashboard
+            </a>
+        {% else %}
+            <a href="{{ url_for('cr_dashboard') }}" class="back">
+                ← Back to Dashboard
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <h3 style="margin-bottom:18px;">All Students</h3>
+
+        <input
+            type="text"
+            id="searchInput"
+            class="search"
+            placeholder="Search by Name, USN, Phone or Email..."
+            onkeyup="searchStudents()"
+        >
+
+        <div class="table-wrapper" style="margin-top:20px;">
+            <table id="studentTable">
+
+                <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>USN</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Department</th>
+                        <th>Semester</th>
+                        <th>Account Status</th>
+                        <th>Today's Upload</th>
+                        <th>Created Date</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                {% for student in students %}
+                    <tr>
+                        <td class="serial">{{ loop.index }}</td>
+                        <td>{{ student.id }}</td>
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.usn or '-' }}</td>
+                        <td>{{ student.phone }}</td>
+                        <td>{{ student.email or '-' }}</td>
+                        <td>{{ student.department or '-' }}</td>
+                        <td>{{ student.semester or '-' }}</td>
+
+                        <td>
+                            {% if student.is_active %}
+                                <span class="status active">Active</span>
+                            {% else %}
+                                <span class="status inactive">Inactive</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if student.upload_status == 'Uploaded' %}
+                                <span class="status uploaded">Uploaded</span>
+                            {% else %}
+                                <span class="status pending">Not Uploaded</span>
+                            {% endif %}
+                        </td>
+
+                        <td>{{ student.created_at }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="11" class="empty">
+                            No students registered yet.
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+function searchStudents() {
+    const input = document.getElementById("searchInput");
+    const filter = input.value.toLowerCase();
+    const rows = document.querySelectorAll("#studentTable tbody tr");
+
+    rows.forEach(row => {
+        row.style.display =
+            row.innerText.toLowerCase().includes(filter) ? "" : "none";
+    });
+}
+</script>
+
+</body>
+</html>

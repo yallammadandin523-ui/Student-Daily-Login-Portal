@@ -1,0 +1,512 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Screenshot Upload</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, #172d50, transparent 40%),
+                linear-gradient(135deg, #080e1c, #101b30);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 18px;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo {
+            width: 65px;
+            height: 65px;
+            margin: 0 auto 15px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #1689ff, #655cff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            box-shadow: 0 8px 25px rgba(22, 137, 255, 0.3);
+        }
+
+        .header h1 {
+            font-size: 30px;
+            margin-bottom: 9px;
+            color: #ffffff;
+        }
+
+        .header p {
+            color: #9eacc3;
+            font-size: 14px;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 22px;
+            align-items: stretch;
+        }
+
+        .card {
+            background: rgba(19, 31, 53, 0.95);
+            border: 1px solid #263b5c;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .card h2 {
+            font-size: 21px;
+            margin-bottom: 9px;
+        }
+
+        .subtitle {
+            color: #9eacc3;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .upload-area {
+            border: 2px dashed #318ef0;
+            border-radius: 15px;
+            padding: 30px 15px;
+            text-align: center;
+            background: #172944;
+            margin-bottom: 20px;
+        }
+
+        .upload-icon {
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        .upload-area h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .upload-area p {
+            color: #aabbd2;
+            font-size: 12px;
+            margin-bottom: 18px;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            color: #cbd7e8;
+            font-size: 12px;
+        }
+
+        input[type="file"]::file-selector-button {
+            background: #253d60;
+            color: white;
+            border: 1px solid #42638e;
+            border-radius: 7px;
+            padding: 9px 13px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .primary-btn {
+            width: 100%;
+            border: none;
+            border-radius: 10px;
+            padding: 14px;
+            background: linear-gradient(135deg, #1689ff, #3568ed);
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(22, 137, 255, 0.3);
+        }
+
+        .access-card {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .access-option {
+            border: 1px solid #2c4264;
+            border-radius: 13px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            background: #172944;
+        }
+
+        .access-button {
+            width: 100%;
+            padding: 17px;
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .access-button:hover {
+            background: #203958;
+        }
+
+        .access-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            background: #253e62;
+        }
+
+        .access-text {
+            flex: 1;
+        }
+
+        .access-text small {
+            display: block;
+            color: #9eacc3;
+            font-size: 11px;
+            font-weight: 400;
+            margin-top: 4px;
+        }
+
+        .arrow {
+            color: #91a8c9;
+            font-size: 17px;
+        }
+
+        .access-form {
+            display: none;
+            padding: 18px;
+            border-top: 1px solid #2c4264;
+        }
+
+        .access-form.active {
+            display: block;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            color: #b8c7dc;
+            margin: 12px 0 7px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #344d70;
+            background: #0d192c;
+            color: white;
+            outline: none;
+            font-size: 13px;
+        }
+
+        .form-input:focus {
+            border-color: #318ef0;
+        }
+
+        .access-submit {
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 17px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            background: #247be9;
+        }
+
+        .cr-submit {
+            background: #7655df;
+        }
+
+        .access-submit:hover {
+            opacity: 0.88;
+        }
+
+        .flash-message {
+            padding: 12px 15px;
+            border-radius: 9px;
+            background: #243c5b;
+            border: 1px solid #42658e;
+            color: #dcecff;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #8fa2bd;
+            font-size: 12px;
+        }
+
+        .logout-link {
+            display: inline-block;
+            margin-top: 12px;
+            color: #6eafff;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .logout-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 750px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .card {
+                padding: 23px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="main-container">
+
+    <div class="header">
+        <div class="logo">📸</div>
+        <h1>Student Daily Login Portal</h1>
+        <p>Daily Screenshot Submission & Management System</p>
+    </div>
+
+    <div class="content">
+
+        <!-- SCREENSHOT UPLOAD -->
+        <div class="card">
+
+            <h2>📤 Daily Screenshot Upload</h2>
+            <p class="subtitle">
+                Upload your daily student login screenshot.
+                Make sure your screenshot is clear and readable.
+            </p>
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="flash-message">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST"
+                  action="{{ url_for('student_upload') }}"
+                  enctype="multipart/form-data">
+
+                <div class="upload-area">
+                    <div class="upload-icon">🖼️</div>
+                    <h3>Select Your Screenshot</h3>
+                    <p>PNG, JPG, JPEG or WEBP · Maximum 5 MB</p>
+
+                    <input
+                        type="file"
+                        name="screenshot"
+                        accept=".png,.jpg,.jpeg,.webp"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="primary-btn">
+                    Upload Screenshot →
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- ADMIN AND CR ACCESS -->
+        <div class="card access-card">
+
+            <h2>🔐 Other Portal Access</h2>
+            <p class="subtitle">
+                Authorized Admin and CR members can access
+                their respective dashboards here.
+            </p>
+
+            <!-- ADMIN ACCESS -->
+            <div class="access-option">
+
+                <button type="button"
+                        class="access-button"
+                        onclick="toggleAccess('admin-form', this)">
+
+                    <span class="access-icon">🛡️</span>
+
+                    <span class="access-text">
+                        ADMIN ACCESS
+                        <small>Open Administrator Dashboard</small>
+                    </span>
+
+                    <span class="arrow">＋</span>
+                </button>
+
+                <div class="access-form" id="admin-form">
+
+                    <form method="POST"
+                          action="{{ url_for('role_access_login') }}">
+
+                        <input type="hidden" name="role" value="admin">
+
+                        <label class="form-label">Admin Phone Number</label>
+                        <input
+                            type="tel"
+                            name="phone"
+                            class="form-input"
+                            placeholder="Enter admin phone number"
+                            required
+                        >
+
+                        <label class="form-label">Admin Password</label>
+                        <input
+                            type="password"
+                            name="password"
+                            class="form-input"
+                            placeholder="Enter admin password"
+                            required
+                        >
+
+                        <button type="submit" class="access-submit">
+                            Login as Admin →
+                        </button>
+
+                    </form>
+
+                </div>
+            </div>
+
+
+            <!-- CR ACCESS -->
+            <div class="access-option">
+
+                <button type="button"
+                        class="access-button"
+                        onclick="toggleAccess('cr-form', this)">
+
+                    <span class="access-icon">👥</span>
+
+                    <span class="access-text">
+                        CR ACCESS
+                        <small>Open Class Representative Dashboard</small>
+                    </span>
+
+                    <span class="arrow">＋</span>
+                </button>
+
+                <div class="access-form" id="cr-form">
+
+                    <form method="POST"
+                          action="{{ url_for('role_access_login') }}">
+
+                        <input type="hidden" name="role" value="cr">
+
+                        <label class="form-label">CR Phone Number</label>
+                        <input
+                            type="tel"
+                            name="phone"
+                            class="form-input"
+                            placeholder="Enter CR phone number"
+                            required
+                        >
+
+                        <label class="form-label">CR Password</label>
+                        <input
+                            type="password"
+                            name="password"
+                            class="form-input"
+                            placeholder="Enter CR password"
+                            required
+                        >
+
+                        <button type="submit"
+                                class="access-submit cr-submit">
+                            Login as CR →
+                        </button>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <p>Student Daily Login Portal · CSE Department · Semester 5</p>
+        <a href="{{ url_for('logout') }}" class="logout-link">
+            Logout
+        </a>
+    </div>
+
+</div>
+
+
+<script>
+    function toggleAccess(formId, button) {
+
+        const selectedForm = document.getElementById(formId);
+        const isAlreadyOpen = selectedForm.classList.contains("active");
+
+        document.querySelectorAll(".access-form").forEach(form => {
+            form.classList.remove("active");
+        });
+
+        document.querySelectorAll(".arrow").forEach(arrow => {
+            arrow.textContent = "＋";
+        });
+
+        if (!isAlreadyOpen) {
+            selectedForm.classList.add("active");
+            button.querySelector(".arrow").textContent = "−";
+        }
+    }
+</script>
+
+</body>
+</html>
