@@ -17,7 +17,10 @@ class Config:
 
     DB_PORT = int(os.getenv("DB_PORT", "4000"))
 
-    DB_SSL_CA = os.getenv("DB_SSL_CA")
+    DB_SSL_CA = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    "isrgrootx1.pem"
+)
 
     UPLOAD_FOLDER = os.path.join(
         os.path.dirname(os.path.abspath(__file__)),

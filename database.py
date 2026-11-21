@@ -1,4 +1,3 @@
-
 import mysql.connector
 from mysql.connector import Error
 from config import Config
@@ -34,11 +33,85 @@ def get_db_connection():
         return None
 
 
+def create_tables():
+    connection = get_db_connection()
+
+    if not connection:
+        print("Database connection failed!")
+        return False
+
+    cursor = connection.cursor()
+
+    try:
+        # Users table
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS users (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(100) NOT NULL,
+                email VARCHAR(150) NOT NULL UNIQUE,
+                phone VARCHAR(15) NOT NULL UNIQUE,
+                password_hash VARCHAR(255) NOT NULL,
+                role VARCHAR(20) NOT NULL DEFAULT 'student',
+                usn VARCHAR(30) UNIQUE,
+                semester INT DEFAULT 5,
+                department VARCHAR(50) DEFAULT 'CSE',
+                is_active BOOLEAN DEFAULT TRUE,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+
+        # Screenshot submissions
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS submissions (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                user_id INT NOT NULL,
+                submission_date DATE NOT NULL,
+                image_filename VARCHAR(255) NOT NULL,
+                image_path VARCHAR(500) NOT NULL,
+                image_hash VARCHAR(64) NOT NULL UNIQUE,
+                uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE KEY unique_user_submission_day
+                    (user_id, submission_date)
+            )
+        """)
+
+        # Daily reports
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS daily_reports (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                report_date DATE NOT NULL UNIQUE,
+                uploaded_count INT DEFAULT 0,
+                not_uploaded_count INT DEFAULT 0,
+                generated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                excel_path VARCHAR(500),
+                zip_path VARCHAR(500)
+            )
+        """)
+
+        connection.commit()
+
+        print("SUCCESS: Database tables created!")
+        print("Tables: users, submissions, daily_reports")
+
+        return True
+
+    except Error as e:
+        connection.rollback()
+        print("Table Creation Error:", e)
+        return False
+
+    finally:
+        cursor.close()
+        connection.close()
+
+
 if __name__ == "__main__":
     connection = get_db_connection()
 
     if connection:
         print("SUCCESS: TiDB Cloud Database Connected!")
         connection.close()
+
+        create_tables()
     else:
-        print("FAILED: Check TiDB credentials and SSL certificate.")
+        print("FAILED: Database connection failed!")

@@ -144,112 +144,111 @@ def login():
 @app.route("/register", methods=["GET", "POST"])
 def register():
 
-    if request.method == "POST":
+    if request.method == "GET":
+        return render_template("register.html")
 
-        name = request.form.get("name", "").strip()
-        usn = request.form.get("usn", "").strip().upper()
-        email = request.form.get("email", "").strip().lower()
-        print("REGISTER EMAIL RECEIVED:", repr(email))
-        phone = request.form.get("phone", "").strip()
-        password = request.form.get("password", "")
-        confirm_password = request.form.get("confirm_password", "")
+    name = request.form.get("name", "").strip()
+    usn = request.form.get("usn", "").strip().upper()
+    email = request.form.get("email", "").strip().lower()
+    phone = request.form.get("phone", "").strip()
+    password = request.form.get("password", "")
+    confirm_password = request.form.get("confirm_password", "")
 
-        # Basic validation
-        if not all([name, usn, email, phone, password, confirm_password]):
-            return render_template(
-                "register.html",
-                error="Please fill all fields!"
-            )
+    print("REGISTER EMAIL RECEIVED:", repr(email))
 
-        # Email validation
-        if "@" not in email or "." not in email.split("@")[-1]:
-            return render_template(
-                "register.html",
-                error="Enter a valid email address!"
-            )
+    # Basic validation
+    if not all([name, usn, email, phone, password, confirm_password]):
+        return render_template("register.html",
+                             error="Please fill all fields!")
 
-        if not phone.isdigit() or not (10 <= len(phone) <= 15):
-            return render_template(
-                "register.html",
-                error="Enter a valid phone number!"
-            )
+    # Email validation
+    if "@" not in email or "." not in email.split("@")[-1]:
+        return render_template("register.html",
+                             error="Enter a valid email address!")
 
-        if len(password) < 6:
-            return render_template(
-                "register.html",
-                error="Password must contain at least 6 characters!"
-            )
+    # Phone validation
+    if not phone.isdigit() or not (10 <= len(phone) <= 15):
+        return render_template("register.html",
+                             error="Enter a valid phone number!")
 
-        if password != confirm_password:
-            return render_template(
-                "register.html",
-                error="Passwords do not match!"
-            )
+    # Password validation
+    if len(password) < 6:
+        return render_template("register.html",
+                             error="Password must contain at least 6 characters!")
 
+    if password != confirm_password:
+        return render_template("register.html",
+                             error="Passwords do not match!")
+
+    connection = None
+    cursor = None
+
+    try:
         connection = get_db_connection()
 
         if not connection:
+            return render_template("register.html",
+                                 error="Database connection failed!")
+
+        cursor = connection.cursor(dictionary=True, buffered=True)
+
+        # Check duplicate phone, USN or email
+        cursor.execute("""
+            SELECT id FROM users
+            WHERE phone = %s OR usn = %s OR email = %s
+            LIMIT 1
+        """, (phone, usn, email))
+
+        existing_user = cursor.fetchone()
+
+        if existing_user:
             return render_template(
                 "register.html",
-                error="Database connection failed!"
+                error="Phone number, USN or Email already registered!"
             )
 
-    cursor = connection.cursor(dictionary=True, buffered=True)
+        # Secure password hashing
+        password_hash = generate_password_hash(password)
 
-    try:
-            # Check duplicate phone, USN or email
-            cursor.execute("""
-                SELECT id FROM users
-                WHERE phone = %s OR usn = %s OR email = %s
-                 LIMIT 1
-            """, (phone, usn, email))
+        # Save student
+        cursor.execute("""
+            INSERT INTO users
+            (name, email, phone, password_hash, role,
+             usn, semester, department, is_active)
+            VALUES (%s, %s, %s, %s, 'student',
+                    %s, 5, 'CSE', TRUE)
+        """, (
+            name,
+            email,
+            phone,
+            password_hash,
+            usn
+        ))
 
-            existing_user = cursor.fetchone()
+        connection.commit()
 
-            if existing_user:
-                return render_template(
-                    "register.html",
-                    error="Phone number, USN or Email already registered!"
-                )
-
-            # Secure password
-            password_hash = generate_password_hash(password)
-
-            # Save CSE 5th semester student with email
-            cursor.execute("""
-                INSERT INTO users
-                (name, email, phone, password_hash, role,
-                 usn, semester, department, is_active)
-                VALUES (%s, %s, %s, %s, 'student',
-                        %s, 5, 'CSE', TRUE)
-            """, (
-                name,
-                email,
-                phone,
-                password_hash,
-                usn
-            ))
-
-            connection.commit()
-
-            return render_template(
-                "login.html",
-                success="Registration successful! Please login."
-            )
+        return render_template(
+            "login.html",
+            success="Registration successful! Please login."
+        )
 
     except Exception as e:
+        if connection:
             connection.rollback()
-            print("Registration Error:", e)
 
-            return render_template(
-                "register.html",
-                error="Registration failed. Please try again."
-            )
+        print("Registration Error:", e)
+
+        return render_template(
+            "register.html",
+            error="Registration failed. Please try again."
+        )
 
     finally:
+        if cursor:
             cursor.close()
-            connection.close()
 
+        if connection:
+            connection.close()
     return render_template("register.html")
 
 
